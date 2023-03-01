@@ -20,66 +20,90 @@ public class PlayerMovementAndAnimations : NetworkBehaviour
     [SerializeField] private List<Sprite> _spritesMoveVariants;
     
 
+    
+
     private float _stepTime;
     private int _sideStepIndex;
     private bool _faceRightDirection;
     private bool _isStayingPlayer;
     private Coroutine _movingCoroutine;
-    
-    private void FixedUpdate()
+
+    private void Start()
     {
-        /*Debug.Log("_faceRightDirection = " + _faceRightDirection);
-        Debug.Log(" isOwned Before if = " + _networkTransform.isOwned + " isClient = " + isClient + " isLocalPlayer = " + isLocalPlayer);
-        Debug.Log(" hasAuthority Before if = " + _networkTransform.hasAuthority + " isClient = " + isClient + " isLocalPlayer = " + isLocalPlayer);
-        
-        Debug.Log(" isOwned Before if = " + _networkTransform.isOwned + " isServer = " + isServer + " isLocalPlayer = " + isLocalPlayer);
-        Debug.Log(" hasAuthority Before if = " + _networkTransform.hasAuthority + " isServer = " + isServer + " isLocalPlayer = " + isLocalPlayer);*/
-        
-        
-        
-            
-            _isStayingPlayer = true;
-            GetInput();
-        
-        
-        /*Debug.Log(" hasAuthority Before after if = " + _networkTransform.hasAuthority);
-        Debug.Log(" isOwned Before after if = " + _networkTransform.isOwned);*/
+        _typeOfPlayerSprite = TypeOfPlayerSprite.MovingMid;
     }
 
+    private void FixedUpdate()
+    {
+        _isStayingPlayer = true;
+        GetInput();
+        
+    }
+    
     private void GetInput()
     {
 
-        if (_networkTransform.hasAuthority)
+        if (_networkTransform.hasAuthority && isClient && isLocalPlayer)
         {
             if (Input.GetKey(KeyCode.A))
             {
            
-                CmdPressedA();
-            
-            
+                PressedA();
+
             }
             else if (Input.GetKey(KeyCode.D))
             {
             
-                CmdPressedD();
+                PressedD();
             
             }
         
             if (Input.GetKey(KeyCode.Space) && _groundChecker.IsGrounded && _playerRigidbody.velocity.y == 0f)
             {
-                CmdJump();
+                Jump();
             }
-
-
-
+            
             CheckForStaticStaying();
+            
+            
         }
         
-        
-
+        CheckEnum();
+    }
+    
+    public enum TypeOfPlayerSprite
+    {
+        MovingLeft,
+        MovingMid,
+        MovingRight,
     }
 
-    private void CmdJump()
+    [SyncVar] private TypeOfPlayerSprite _typeOfPlayerSprite;
+
+    [Command]
+    private void CmdChangeSprite(TypeOfPlayerSprite type)
+    {
+        _typeOfPlayerSprite = type;
+    }
+
+
+    private void CheckEnum()
+    {
+        if (_typeOfPlayerSprite == TypeOfPlayerSprite.MovingLeft)
+        {
+            _playerRenderer.sprite = _spritesMoveVariants[0];
+        }
+        else if (_typeOfPlayerSprite == TypeOfPlayerSprite.MovingMid)
+        {
+            _playerRenderer.sprite = _spritesMoveVariants[1];
+        }
+        else if (_typeOfPlayerSprite == TypeOfPlayerSprite.MovingRight)
+        {
+            _playerRenderer.sprite = _spritesMoveVariants[2];
+        }
+    }
+    
+    private void Jump()
     {
         if (_networkTransform.hasAuthority)
         {
@@ -90,7 +114,11 @@ public class PlayerMovementAndAnimations : NetworkBehaviour
             
             CheckCoroutine();
             
-            _playerRenderer.sprite = _jumpSprite;
+            //_playerRenderer.sprite = _jumpSprite;
+            _typeOfPlayerSprite = TypeOfPlayerSprite.MovingLeft;
+            CmdChangeSprite(_typeOfPlayerSprite);
+            
+
         }
     }
 
@@ -114,7 +142,7 @@ public class PlayerMovementAndAnimations : NetworkBehaviour
         }
     }
 
-    private void CmdPressedA()
+    private void PressedA()
     {
         if (_faceRightDirection)
         {
@@ -135,8 +163,11 @@ public class PlayerMovementAndAnimations : NetworkBehaviour
         else
         {
             CheckCoroutine();
-                
-            _playerRenderer.sprite = _jumpSprite;
+
+            _typeOfPlayerSprite = TypeOfPlayerSprite.MovingLeft;
+            CmdChangeSprite(_typeOfPlayerSprite);
+            //_playerRenderer.sprite = _jumpSprite;
+
         }
 
         _isStayingPlayer = false;
@@ -144,7 +175,7 @@ public class PlayerMovementAndAnimations : NetworkBehaviour
     }
 
 
-    private void CmdPressedD()
+    private void PressedD()
     {
         if (!_faceRightDirection)
         {
@@ -166,7 +197,9 @@ public class PlayerMovementAndAnimations : NetworkBehaviour
         {
             CheckCoroutine();
                 
-            _playerRenderer.sprite = _jumpSprite;
+            //_playerRenderer.sprite = _jumpSprite;
+            _typeOfPlayerSprite = TypeOfPlayerSprite.MovingLeft;
+            CmdChangeSprite(_typeOfPlayerSprite);
         }
             
             
@@ -187,10 +220,11 @@ public class PlayerMovementAndAnimations : NetworkBehaviour
             CheckCoroutine();
             
             
-            _playerRenderer.sprite = _staticSprite;
+            //_playerRenderer.sprite = _staticSprite;
+            _typeOfPlayerSprite = TypeOfPlayerSprite.MovingMid;
+            CmdChangeSprite(_typeOfPlayerSprite);
         }
     }
-    
     
     private IEnumerator AnimationCoroutine()
     {
@@ -199,8 +233,27 @@ public class PlayerMovementAndAnimations : NetworkBehaviour
             if (_sideStepIndex >= _spritesMoveVariants.Count)
                 _sideStepIndex = 0;
 
-            _playerRenderer.sprite = _spritesMoveVariants[_sideStepIndex];
+            switch (_sideStepIndex)
+            {
+                case 0:
+                {
+                    _typeOfPlayerSprite = TypeOfPlayerSprite.MovingLeft;
+                    break;
+                }
+                case 1 or 3:
+                {
+                    _typeOfPlayerSprite = TypeOfPlayerSprite.MovingMid;
+                    break;
+                }
+                case 2:
+                {
+                    _typeOfPlayerSprite = TypeOfPlayerSprite.MovingRight;
+                    break;
+                }
+            }
             
+            
+            CmdChangeSprite(_typeOfPlayerSprite);
             yield return new WaitForSeconds(_stepSpeed);
             _sideStepIndex++;
         }
