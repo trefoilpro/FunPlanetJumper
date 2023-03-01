@@ -33,7 +33,7 @@ public class MainMenu : NetworkBehaviour
     public GameObject UIPlayerPrefab;
     public Text IDText;
     public Button BeginGameButton;
-    public GameObject TurnManager;
+    public GameObject TurnManagerPrefab;
     public bool inGame;
 
     private void Start()
@@ -49,7 +49,12 @@ public class MainMenu : NetworkBehaviour
 
             for(int i = 0; i < players.Length; i++)
             {
-                players[i].gameObject.SetActive(false);
+                if (players[i].FirstSpawn)
+                {
+                    players[i].FirstSpawn = false;
+                    players[i].StartPosition = players[i].transform.position;
+                }
+                players[i].gameObject.transform.localScale = Vector3.zero;
             }
         }
     }
@@ -174,7 +179,7 @@ public class MainMenu : NetworkBehaviour
 
     public void BeginGame(string matchID)
     {
-        GameObject newTurnManager = Instantiate(TurnManager);
+        GameObject newTurnManager = Instantiate(TurnManagerPrefab);
         NetworkServer.Spawn(newTurnManager);
         newTurnManager.GetComponent<NetworkMatch>().matchID = matchID.ToGuid();
         TurnManager turnManager = newTurnManager.GetComponent<TurnManager>();
@@ -185,6 +190,7 @@ public class MainMenu : NetworkBehaviour
             {
                 foreach(var player in matches[i].players)
                 {
+                    Debug.Log("StartGame in BeginGame");
                     Player player1 = player.GetComponent<Player>();
                     turnManager.AddPlayer(player1);
                     player1.StartGame();

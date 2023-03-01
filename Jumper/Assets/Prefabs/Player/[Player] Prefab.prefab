@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 6312414679569247285}
   - component: {fileID: 4246872230842800669}
   - component: {fileID: 3309683895523506284}
-  - component: {fileID: 6188850715279944808}
+  - component: {fileID: 5312194447848885655}
   m_Layer: 0
   m_Name: '[Player] Prefab'
   m_TagString: Player
@@ -284,7 +284,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  _rigidbody2D: {fileID: 3309683895523506284}
   MatchID: 
+  FirstSpawn: 1
+  StartPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &6312414679569247285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,10 +331,20 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
+  _networkTransform: {fileID: 6312414679569247285}
   _groundChecker: {fileID: 1566532119330603460}
   _playerRigidbody: {fileID: 3309683895523506284}
-  _speed: 6
-  _jumpPower: 12
+  _speed: 7.2
+  _jumpPower: 16
+  _playerRenderer: {fileID: 2261046729920787889}
+  _stepSpeed: 0.2
+  _staticSprite: {fileID: 21300000, guid: 29171cb5e2c026541849eb06f5494a53, type: 3}
+  _jumpSprite: {fileID: 21300000, guid: a6ad467df5253694d91f670e1d3d1fb2, type: 3}
+  _spritesMoveVariants:
+  - {fileID: 21300000, guid: a6ad467df5253694d91f670e1d3d1fb2, type: 3}
+  - {fileID: 21300000, guid: 29171cb5e2c026541849eb06f5494a53, type: 3}
+  - {fileID: 21300000, guid: 6ee2ee2fe31bc2e4580e4ecf972445b0, type: 3}
+  - {fileID: 21300000, guid: 29171cb5e2c026541849eb06f5494a53, type: 3}
 --- !u!50 &3309683895523506284
 Rigidbody2D:
   serializedVersion: 4
@@ -347,13 +360,13 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &6188850715279944808
+--- !u!114 &5312194447848885655
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -369,10 +382,10 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   target: {fileID: 3309683895523506284}
-  clientAuthority: 0
+  clientAuthority: 1
   syncVelocity: 1
-  clearVelocity: 0
+  clearVelocity: 1
   velocitySensitivity: 0.1
   syncAngularVelocity: 1
-  clearAngularVelocity: 0
+  clearAngularVelocity: 1
   angularVelocitySensitivity: 0.1

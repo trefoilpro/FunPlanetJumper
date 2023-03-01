@@ -8,8 +8,11 @@ using UnityEngine.SceneManagement;
 
 public class Player : NetworkBehaviour
 {
+    [SerializeField] private Rigidbody2D _rigidbody2D;
     public static Player LocalPlayer;
     [SyncVar] public string MatchID;
+    public bool FirstSpawn = true;
+    public Vector3 StartPosition;
 
     private NetworkMatch _networkMatch;
 
@@ -21,6 +24,7 @@ public class Player : NetworkBehaviour
         
         if (isLocalPlayer)
         {   
+            Debug.Log("isLocalPlayer LocalPlayer = this;");
             LocalPlayer = this;
         }
         else
@@ -113,7 +117,10 @@ public class Player : NetworkBehaviour
         Debug.Log($"ID {MatchID} | start");
         DontDestroyOnLoad(gameObject);
         MainMenu.instance.inGame = true;
-        gameObject.SetActive(true);
+        transform.localScale = new Vector3(3f, 3f, 1f);
+        transform.position = StartPosition;
+        _rigidbody2D.velocity = Vector2.zero;
         SceneManager.LoadScene("Game", LoadSceneMode.Additive);
+        MainMenu.instance.gameObject.SetActive(false);
     }
 }

@@ -1484,7 +1484,7 @@ MonoBehaviour:
   UIPlayerPrefab: {fileID: 5076466398497924543, guid: 993d19fb11b503b44a9701bac72ac147, type: 3}
   IDText: {fileID: 741695926}
   BeginGameButton: {fileID: 1029599501}
-  TurnManager: {fileID: 5809189670073803994, guid: 4b00232b05e09fa47aa62f2adb0a3044, type: 3}
+  TurnManagerPrefab: {fileID: 5809189670073803994, guid: 4b00232b05e09fa47aa62f2adb0a3044, type: 3}
   inGame: 0
 --- !u!114 &1389719456
 MonoBehaviour:
