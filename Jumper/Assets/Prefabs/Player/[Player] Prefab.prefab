@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 4246872230842800669}
   - component: {fileID: 3309683895523506284}
   - component: {fileID: 5312194447848885655}
+  - component: {fileID: 8983211598915515515}
   m_Layer: 0
   m_Name: '[Player] Prefab'
   m_TagString: Player
@@ -334,7 +335,7 @@ MonoBehaviour:
   _networkTransform: {fileID: 6312414679569247285}
   _groundChecker: {fileID: 1566532119330603460}
   _playerRigidbody: {fileID: 3309683895523506284}
-  _speed: 7.2
+  _speed: 10
   _jumpPower: 16
   _playerRenderer: {fileID: 2261046729920787889}
   _stepSpeed: 0.2
@@ -389,3 +390,18 @@ MonoBehaviour:
   syncAngularVelocity: 1
   clearAngularVelocity: 1
   angularVelocitySensitivity: 0.1
+--- !u!114 &8983211598915515515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4686661458260400850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f76c6131790422047b506375167dbcb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0.1
