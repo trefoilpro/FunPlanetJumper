@@ -12,6 +12,5 @@ public class GroundChecker : MonoBehaviour
     private void Update()
     {
         IsGrounded = Physics2D.OverlapCapsule(_groundCheck.position, new Vector2(1.8f, 1f), CapsuleDirection2D.Horizontal, 0, _groundLayer);
-        Debug.Log("IsGrounded = " + IsGrounded);
     }
 }
